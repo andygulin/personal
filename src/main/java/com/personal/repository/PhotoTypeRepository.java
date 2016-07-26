@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.personal.entity.PhotoType;
 
-public interface PhotoTypeDao extends JpaRepository<PhotoType, String>, JpaSpecificationExecutor<PhotoType> {
+public interface PhotoTypeRepository extends JpaRepository<PhotoType, String>, JpaSpecificationExecutor<PhotoType> {
 
 	@Modifying
 	@Query("update PhotoType a set a.cover.id=:id where a.id=:tid")

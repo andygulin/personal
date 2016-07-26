@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.personal.entity.Photo;
 
-public interface PhotoDao extends JpaRepository<Photo, String>, JpaSpecificationExecutor<Photo> {
+public interface PhotoRepository extends JpaRepository<Photo, String>, JpaSpecificationExecutor<Photo> {
 
 	@Query("from Photo a where a.type.id=:id")
 	List<Photo> getListById(@Param("id") String id);

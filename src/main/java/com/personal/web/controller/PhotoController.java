@@ -10,7 +10,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,10 +18,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -52,7 +53,7 @@ public class PhotoController {
 	private static final String PAGE_SIZE = "8";
 	private static final String PHOTO_VIEW_PAGE_SIZE = "6";
 
-	@RequestMapping(method = RequestMethod.GET)
+	@GetMapping
 	public String list(@RequestParam(value = "page", defaultValue = "1") int pageNumber,
 			@RequestParam(value = "page.size", defaultValue = PAGE_SIZE) int pageSize,
 			@RequestParam(value = "sortType", defaultValue = "auto") String sortType, Model model,
@@ -68,7 +69,7 @@ public class PhotoController {
 		return "photo/photoList";
 	}
 
-	@RequestMapping(value = "/create", method = RequestMethod.GET)
+	@GetMapping("/create")
 	public String createForm(Model model) {
 		model.addAttribute("photo", new Photo());
 		model.addAttribute("action", "create");
@@ -77,10 +78,10 @@ public class PhotoController {
 		return "photo/photoForm";
 	}
 
-	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	@PostMapping("/create")
 	public String create(RedirectAttributes redirectAttributes, HttpSession session, @Valid PhotoType type,
 			@RequestParam(value = "remark") String[] remarks, @RequestParam(value = "image") MultipartFile[] images)
-					throws Exception {
+			throws Exception {
 		User user = (User) session.getAttribute(Constants.SESSION_USER);
 		Photo coverPhoto = null;
 		byte[] image = null;
@@ -111,7 +112,7 @@ public class PhotoController {
 		return "redirect:/photo/create?id=" + type.getId();
 	}
 
-	@RequestMapping(value = "/printImage/{photo_id}", method = RequestMethod.GET)
+	@GetMapping("/printImage/{photo_id}")
 	public ResponseEntity<byte[]> printImage(@PathVariable(value = "photo_id") String photo_id) {
 		Photo photo = photoService.getPhoto(photo_id);
 		byte[] image = photo.getImage();
@@ -127,7 +128,7 @@ public class PhotoController {
 		return new ResponseEntity<byte[]>(image, headers, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/view/{id}", method = RequestMethod.GET)
+	@GetMapping("/view/{id}")
 	public String view(@PathVariable(value = "id") String id,
 			@RequestParam(value = "page", defaultValue = "1") int pageNumber,
 			@RequestParam(value = "page.size", defaultValue = PHOTO_VIEW_PAGE_SIZE) int pageSize,
@@ -149,14 +150,14 @@ public class PhotoController {
 		return "photo/photoView";
 	}
 
-	@RequestMapping(value = "/delete", method = RequestMethod.POST)
+	@PostMapping("/delete")
 	@ResponseBody
 	public String delete(@RequestParam("id") String id) {
 		photoService.deletePhoto(id);
 		return null;
 	}
 
-	@RequestMapping(value = "/setCover", method = RequestMethod.POST)
+	@PostMapping("/setCover")
 	@ResponseBody
 	public String setCover(@RequestParam("id") String id, @RequestParam("tid") String tid) {
 		PhotoType photoType = photoService.getPhotoType(tid);
@@ -166,7 +167,7 @@ public class PhotoController {
 		return null;
 	}
 
-	@RequestMapping(value = "/download/{id}", method = RequestMethod.GET)
+	@GetMapping("/download/{id}")
 	public ResponseEntity<byte[]> download(@PathVariable(value = "id") String id) throws Exception {
 		Map<String, Object> resultMap = photoService.zipFile(id);
 		File zipFile = (File) resultMap.get("zipFile");
@@ -181,7 +182,7 @@ public class PhotoController {
 		return new ResponseEntity<byte[]>(response, headers, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/removeAll/{id}", method = RequestMethod.POST)
+	@PostMapping("/removeAll/{id}")
 	@ResponseBody
 	public String removeAll(@PathVariable(value = "id") String id) {
 		PhotoType photoType = photoService.getPhotoType(id);
@@ -193,7 +194,7 @@ public class PhotoController {
 
 	// 分类的添加修改
 
-	@RequestMapping(value = "/createType", method = RequestMethod.GET)
+	@GetMapping(value = "/createType")
 	public String createTypeForm(Model model) {
 		model.addAttribute("photoType", new PhotoType());
 		model.addAttribute("action", "createType");
@@ -201,7 +202,7 @@ public class PhotoController {
 		return "photo/photoTypeForm";
 	}
 
-	@RequestMapping(value = "/createType", method = RequestMethod.POST)
+	@PostMapping("/createType")
 	public String createType(@Valid PhotoType photoType, RedirectAttributes redirectAttributes) {
 		photoType.setCover(null);
 		photoType.setCreateDate(new Date());
@@ -210,7 +211,7 @@ public class PhotoController {
 		return "redirect:/photo/";
 	}
 
-	@RequestMapping(value = "/updateType/{id}", method = RequestMethod.GET)
+	@GetMapping("/updateType/{id}")
 	public String updateTypeForm(@PathVariable("id") String id, Model model) {
 		model.addAttribute("photoType", photoService.getPhotoType(id));
 		model.addAttribute("action", "updateType");
@@ -218,7 +219,7 @@ public class PhotoController {
 		return "photo/photoTypeForm";
 	}
 
-	@RequestMapping(value = "/updateType", method = RequestMethod.POST)
+	@PostMapping("/updateType")
 	public String updateType(@Valid @ModelAttribute("photoType") PhotoType photoType,
 			RedirectAttributes redirectAttributes) {
 		String coverId = photoType.getCover().getId();

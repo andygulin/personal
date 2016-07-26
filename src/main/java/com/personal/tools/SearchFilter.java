@@ -3,7 +3,7 @@ package com.personal.tools;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 
 import com.google.common.collect.Maps;
 
@@ -26,8 +26,7 @@ public class SearchFilter {
 	/**
 	 * searchParams中key的格式为OPERATOR_FIELDNAME
 	 */
-	public static Map<String, SearchFilter> parse(
-			Map<String, Object> searchParams) {
+	public static Map<String, SearchFilter> parse(Map<String, Object> searchParams) {
 		Map<String, SearchFilter> filters = Maps.newHashMap();
 
 		for (Entry<String, Object> entry : searchParams.entrySet()) {
@@ -41,8 +40,7 @@ public class SearchFilter {
 			// 拆分operator与filedAttribute
 			String[] names = StringUtils.split(key, "_");
 			if (names.length != 2) {
-				throw new IllegalArgumentException(key
-						+ " is not a valid search filter name");
+				throw new IllegalArgumentException(key + " is not a valid search filter name");
 			}
 			String filedName = names[1];
 			Operator operator = Operator.valueOf(names[0]);

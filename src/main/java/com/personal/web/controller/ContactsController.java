@@ -11,10 +11,11 @@ import javax.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -40,7 +41,7 @@ public class ContactsController {
 		sortTypes.put("createDate", "创建时间");
 	}
 
-	@RequestMapping(method = RequestMethod.GET)
+	@GetMapping
 	public String list(@RequestParam(value = "page", defaultValue = "1") int pageNumber,
 			@RequestParam(value = "page.size", defaultValue = Constants.DEFAULT_PAGE_SIZE) int pageSize,
 			@RequestParam(value = "sortType", defaultValue = "auto") String sortType, Model model,
@@ -57,7 +58,7 @@ public class ContactsController {
 		return "contacts/contactsList";
 	}
 
-	@RequestMapping(value = "/create", method = RequestMethod.GET)
+	@GetMapping("/create")
 	public String createForm(Model model) {
 		model.addAttribute("contacts", new Contacts());
 		model.addAttribute("action", "create");
@@ -66,7 +67,7 @@ public class ContactsController {
 		return "contacts/contactsForm";
 	}
 
-	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	@PostMapping("/create")
 	public String create(@Valid Contacts contacts, RedirectAttributes redirectAttributes, HttpSession session) {
 		User user = (User) session.getAttribute(Constants.SESSION_USER);
 		contacts.setCreateDate(new Date());
@@ -76,7 +77,7 @@ public class ContactsController {
 		return "redirect:/contacts/";
 	}
 
-	@RequestMapping(value = "/update/{id}", method = RequestMethod.GET)
+	@GetMapping("/update/{id}")
 	public String updateForm(@PathVariable("id") String id, Model model) {
 		model.addAttribute("contacts", contactsService.getContacts(id));
 		model.addAttribute("action", "update");
@@ -85,21 +86,21 @@ public class ContactsController {
 		return "contacts/contactsForm";
 	}
 
-	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	@PostMapping("/update")
 	public String update(@Valid @ModelAttribute("contacts") Contacts contacts, RedirectAttributes redirectAttributes) {
 		contactsService.saveContacts(contacts);
 		redirectAttributes.addFlashAttribute("message", "更新联系人成功");
 		return "redirect:/contacts/";
 	}
 
-	@RequestMapping(value = "/delete/{id}")
+	@PostMapping("/delete/{id}")
 	public String delete(@PathVariable("id") String id, RedirectAttributes redirectAttributes) {
 		contactsService.deleteContacts(id);
 		redirectAttributes.addFlashAttribute("message", "删除联系人成功");
 		return "redirect:/contacts/";
 	}
 
-	@RequestMapping(value = "/view/{id}", method = RequestMethod.GET)
+	@GetMapping("/view/{id}")
 	public String view(@PathVariable("id") String id, Model model) {
 		Contacts contacts = contactsService.getContacts(id);
 		model.addAttribute("contactsTypes", contactsService.getContactsTypeCount());
@@ -110,7 +111,7 @@ public class ContactsController {
 
 	// 分类的添加修改
 
-	@RequestMapping(value = "/createType", method = RequestMethod.GET)
+	@GetMapping("/createType")
 	public String createTypeForm(Model model) {
 		model.addAttribute("contactsType", new ContactsType());
 		model.addAttribute("action", "createType");
@@ -118,14 +119,14 @@ public class ContactsController {
 		return "contacts/contactsTypeForm";
 	}
 
-	@RequestMapping(value = "/createType", method = RequestMethod.POST)
+	@PostMapping("/createType")
 	public String createType(@Valid ContactsType contactsType, RedirectAttributes redirectAttributes) {
 		contactsService.saveContactsType(contactsType);
 		redirectAttributes.addFlashAttribute("message", "创建分类成功");
 		return "redirect:/contacts/";
 	}
 
-	@RequestMapping(value = "/updateType/{id}", method = RequestMethod.GET)
+	@GetMapping("/updateType/{id}")
 	public String updateTypeForm(@PathVariable("id") String id, Model model) {
 		model.addAttribute("contactsType", contactsService.getContactsType(id));
 		model.addAttribute("action", "updateType");
@@ -133,7 +134,7 @@ public class ContactsController {
 		return "contacts/contactsTypeForm";
 	}
 
-	@RequestMapping(value = "/updateType", method = RequestMethod.POST)
+	@PostMapping("/updateType")
 	public String updateType(@Valid @ModelAttribute("contactsType") ContactsType contactsType,
 			RedirectAttributes redirectAttributes) {
 		contactsService.saveContactsType(contactsType);

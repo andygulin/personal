@@ -11,10 +11,11 @@ import javax.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -39,7 +40,7 @@ public class AccoutController {
 		sortTypes.put("createDate", "创建时间");
 	}
 
-	@RequestMapping(method = RequestMethod.GET)
+	@GetMapping
 	public String list(@RequestParam(value = "page", defaultValue = "1") int pageNumber,
 			@RequestParam(value = "page.size", defaultValue = Constants.DEFAULT_PAGE_SIZE) int pageSize,
 			@RequestParam(value = "sortType", defaultValue = "auto") String sortType, Model model,
@@ -55,7 +56,7 @@ public class AccoutController {
 		return "accout/accoutList";
 	}
 
-	@RequestMapping(value = "/create", method = RequestMethod.GET)
+	@GetMapping("/create")
 	public String createForm(Model model) {
 		model.addAttribute("accout", new Accout());
 		model.addAttribute("action", "create");
@@ -63,7 +64,7 @@ public class AccoutController {
 		return "accout/accoutForm";
 	}
 
-	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	@PostMapping("/create")
 	public String create(@Valid Accout accout, RedirectAttributes redirectAttributes, HttpSession session) {
 		User user = (User) session.getAttribute(Constants.SESSION_USER);
 		accout.setCreateDate(new Date());
@@ -73,7 +74,7 @@ public class AccoutController {
 		return "redirect:/accout/";
 	}
 
-	@RequestMapping(value = "/update/{id}", method = RequestMethod.GET)
+	@GetMapping("/update/{id}")
 	public String updateForm(@PathVariable("id") String id, Model model) {
 		model.addAttribute("accout", accoutService.get(id));
 		model.addAttribute("action", "update");
@@ -81,14 +82,14 @@ public class AccoutController {
 		return "accout/accoutForm";
 	}
 
-	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	@PostMapping("/update")
 	public String update(@Valid @ModelAttribute("accout") Accout accout, RedirectAttributes redirectAttributes) {
 		accoutService.save(accout);
 		redirectAttributes.addFlashAttribute("message", "更新帐号成功");
 		return "redirect:/accout/";
 	}
 
-	@RequestMapping(value = "/delete/{id}")
+	@PostMapping("/delete/{id}")
 	public String delete(@PathVariable("id") String id, RedirectAttributes redirectAttributes) {
 		accoutService.delete(id);
 		redirectAttributes.addFlashAttribute("message", "删除帐号成功");

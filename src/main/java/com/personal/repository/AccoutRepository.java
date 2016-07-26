@@ -3,7 +3,7 @@ package com.personal.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-import com.personal.entity.Article;
+import com.personal.entity.Accout;
 
-public interface ArticleDao extends JpaRepository<Article, String>, JpaSpecificationExecutor<Article> {
+public interface AccoutRepository extends JpaRepository<Accout, String>, JpaSpecificationExecutor<Accout> {
 }

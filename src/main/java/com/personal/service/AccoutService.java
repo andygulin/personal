@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.personal.entity.Accout;
-import com.personal.repository.AccoutDao;
+import com.personal.repository.AccoutRepository;
 import com.personal.tools.DynamicSpecifications;
 import com.personal.tools.SearchFilter;
 
@@ -23,30 +23,30 @@ import com.personal.tools.SearchFilter;
 public class AccoutService {
 
 	@Inject
-	private AccoutDao accoutDao;
+	private AccoutRepository accoutRepository;
 
 	public List<Accout> getList() {
-		return accoutDao.findAll();
+		return accoutRepository.findAll();
 	}
 
 	public Accout get(String id) {
-		return accoutDao.findOne(id);
+		return accoutRepository.findOne(id);
 	}
 
 	@Transactional(rollbackFor = Exception.class)
 	public Accout save(Accout accout) {
-		return accoutDao.save(accout);
+		return accoutRepository.save(accout);
 	}
 
 	@Transactional(rollbackFor = Exception.class)
 	public void delete(String id) {
-		accoutDao.delete(id);
+		accoutRepository.delete(id);
 	}
 
 	public Page<Accout> findByPage(Map<String, Object> searchParams, int pageNumber, int pageSize, String sortType) {
 		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize, sortType);
 		Specification<Accout> spec = buildSpecification(searchParams);
-		return accoutDao.findAll(spec, pageRequest);
+		return accoutRepository.findAll(spec, pageRequest);
 	}
 
 	private PageRequest buildPageRequest(int pageNumber, int pageSize, String sortType) {
@@ -66,6 +66,6 @@ public class AccoutService {
 	}
 
 	public Page<Accout> getListOrderByCreateDate(int page, int pageSize) {
-		return accoutDao.findAll(new PageRequest(page, pageSize, new Sort(Direction.DESC, "createDate")));
+		return accoutRepository.findAll(new PageRequest(page, pageSize, new Sort(Direction.DESC, "createDate")));
 	}
 }

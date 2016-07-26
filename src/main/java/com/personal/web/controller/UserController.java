@@ -8,9 +8,10 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -41,7 +42,7 @@ public class UserController {
 	@Inject
 	private ContactsService contactsService;
 
-	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	@GetMapping("/login")
 	public String loginForm(Model model, HttpSession session) {
 		Object user = session.getAttribute(Constants.SESSION_USER);
 		if (user != null) {
@@ -51,7 +52,7 @@ public class UserController {
 		return "user/loginForm";
 	}
 
-	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	@PostMapping("/login")
 	public String userLogin(@Valid @ModelAttribute("user") User user, RedirectAttributes redirectAttributes,
 			Model model, HttpSession session) {
 		user.setPassword(DigestUtils.md5Hex(user.getPassword()));
@@ -67,7 +68,7 @@ public class UserController {
 		}
 	}
 
-	@RequestMapping(value = "/index", method = RequestMethod.GET)
+	@GetMapping("/index")
 	public String index(Model model) {
 		model.addAttribute("title", "个人中心");
 		return "/user/indexFrame";
@@ -75,7 +76,7 @@ public class UserController {
 
 	private static final int PAGE = 0;
 
-	@RequestMapping(value = "/ajaxAccout", method = RequestMethod.GET)
+	@GetMapping("/ajaxAccout")
 	public String ajaxAccout(@RequestParam(value = "size", required = false, defaultValue = "5") int size,
 			Model model) {
 		Page<Accout> accouts = accoutService.getListOrderByCreateDate(PAGE, size);
@@ -83,7 +84,7 @@ public class UserController {
 		return "user/ajax/accout";
 	}
 
-	@RequestMapping(value = "/ajaxArticle", method = RequestMethod.GET)
+	@GetMapping("/ajaxArticle")
 	public String ajaxArticle(@RequestParam(value = "size", required = false, defaultValue = "5") int size,
 			Model model) {
 		Page<Article> articles = articleService.getArticleListOrderByCreateDate(PAGE, size);
@@ -92,7 +93,7 @@ public class UserController {
 		return "user/ajax/article";
 	}
 
-	@RequestMapping(value = "/ajaxContacts", method = RequestMethod.GET)
+	@GetMapping("/ajaxContacts")
 	public String ajaxContacts(@RequestParam(value = "size", required = false, defaultValue = "5") int size,
 			Model model) {
 		Page<Contacts> contacts = contactsService.getArticleListOrderByCreateDate(PAGE, size);
@@ -100,14 +101,14 @@ public class UserController {
 		return "user/ajax/contacts";
 	}
 
-	@RequestMapping(value = "/ajaxPhoto", method = RequestMethod.GET)
+	@GetMapping("/ajaxPhoto")
 	public String ajaxPhoto(@RequestParam(value = "size", required = false, defaultValue = "6") int size, Model model) {
 		Page<Photo> photos = photoService.getPhotoListOrderByCreateDate(PAGE, size);
 		model.addAttribute("photos", photos);
 		return "user/ajax/photo";
 	}
 
-	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	@GetMapping("/logout")
 	public String userLogout(RedirectAttributes redirectAttributes, HttpSession session) {
 		session.removeAttribute(Constants.SESSION_USER);
 		redirectAttributes.addFlashAttribute("message", "你已成功退出");
@@ -115,13 +116,13 @@ public class UserController {
 		return "redirect:/user/login";
 	}
 
-	@RequestMapping(value = "/updatepassword", method = RequestMethod.GET)
+	@GetMapping("/updatepassword")
 	public String updatepasswordForm(Model model) {
 		model.addAttribute("title", "修改密码");
 		return "user/updatepasswordForm";
 	}
 
-	@RequestMapping(value = "/updatepassword", method = RequestMethod.POST)
+	@PostMapping("/updatepassword")
 	public String updatepassword(@RequestParam("password1") String password1,
 			@RequestParam("password2") String password2, RedirectAttributes redirectAttributes, HttpSession session) {
 		User user = (User) session.getAttribute(Constants.SESSION_USER);

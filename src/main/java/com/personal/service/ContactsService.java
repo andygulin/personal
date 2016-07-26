@@ -5,8 +5,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.apache.commons.lang3.BooleanUtils;
-import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,8 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.google.common.collect.Lists;
 import com.personal.entity.Contacts;
 import com.personal.entity.ContactsType;
-import com.personal.repository.ContactsDao;
-import com.personal.repository.ContactsTypeDao;
+import com.personal.repository.ContactsRepository;
+import com.personal.repository.ContactsTypeRepository;
 import com.personal.tools.DynamicSpecifications;
 import com.personal.tools.SearchFilter;
 
@@ -28,31 +28,31 @@ import com.personal.tools.SearchFilter;
 public class ContactsService {
 
 	@Inject
-	private ContactsDao contactsDao;
+	private ContactsRepository contactsRepository;
 
 	public List<Contacts> getContactsList() {
-		return contactsDao.findAll();
+		return contactsRepository.findAll();
 	}
 
 	public Contacts getContacts(String id) {
-		return contactsDao.findOne(id);
+		return contactsRepository.findOne(id);
 	}
 
 	@Transactional(rollbackFor = Exception.class)
 	public Contacts saveContacts(Contacts contacts) {
-		return contactsDao.save(contacts);
+		return contactsRepository.save(contacts);
 	}
 
 	@Transactional(rollbackFor = Exception.class)
 	public void deleteContacts(String id) {
-		contactsDao.delete(id);
+		contactsRepository.delete(id);
 	}
 
 	public Page<Contacts> findContactsByPage(Map<String, Object> searchParams, int pageNumber, int pageSize,
 			String sortType) {
 		PageRequest pageRequest = buildContactsPageRequest(pageNumber, pageSize, sortType);
 		Specification<Contacts> spec = buildContactsSpecification(searchParams);
-		return contactsDao.findAll(spec, pageRequest);
+		return contactsRepository.findAll(spec, pageRequest);
 	}
 
 	private PageRequest buildContactsPageRequest(int pageNumber, int pageSize, String sortType) {
@@ -72,38 +72,38 @@ public class ContactsService {
 	}
 
 	public Page<Contacts> getArticleListOrderByCreateDate(int page, int pageSize) {
-		return contactsDao.findAll(new PageRequest(page, pageSize, new Sort(Direction.DESC, "createDate")));
+		return contactsRepository.findAll(new PageRequest(page, pageSize, new Sort(Direction.DESC, "createDate")));
 	}
 
 	// ArticleType
 	@Autowired
-	private ContactsTypeDao contactsTypeDao;
+	private ContactsTypeRepository contactsTypeRepository;
 
 	public List<ContactsType> getContactsTypeList() {
-		return contactsTypeDao.findAll();
+		return contactsTypeRepository.findAll();
 	}
 
 	public ContactsType getContactsType(String id) {
-		return contactsTypeDao.findOne(id);
+		return contactsTypeRepository.findOne(id);
 	}
 
 	@Transactional(rollbackFor = Exception.class)
 	public ContactsType saveContactsType(ContactsType contactsType) {
-		return contactsTypeDao.save(contactsType);
+		return contactsTypeRepository.save(contactsType);
 	}
 
 	@Transactional(rollbackFor = Exception.class)
 	public List<ContactsType> batchSaveContactsType(List<ContactsType> contactsTypes) {
-		return contactsTypeDao.save(contactsTypes);
+		return contactsTypeRepository.save(contactsTypes);
 	}
 
 	@Transactional(rollbackFor = Exception.class)
 	public void deleteContactsType(String id) {
-		contactsTypeDao.delete(id);
+		contactsTypeRepository.delete(id);
 	}
 
 	public List<ContactsType> getContactsTypeCount() {
-		List<Object[]> list = contactsTypeDao.getContactsTypeCount();
+		List<Object[]> list = contactsTypeRepository.getContactsTypeCount();
 		List<ContactsType> contactsTypes = Lists.newArrayList();
 		for (Object[] objs : list) {
 			Object[] obj = objs;

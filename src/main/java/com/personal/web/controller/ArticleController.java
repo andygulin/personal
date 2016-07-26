@@ -16,10 +16,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -47,7 +48,7 @@ public class ArticleController {
 
 	private static final String PAGE_SIZE = "20";
 
-	@RequestMapping(method = RequestMethod.GET)
+	@GetMapping
 	public String list(@RequestParam(value = "page", defaultValue = "1") int pageNumber,
 			@RequestParam(value = "page.size", defaultValue = PAGE_SIZE) int pageSize,
 			@RequestParam(value = "sortType", defaultValue = "auto") String sortType, Model model,
@@ -64,7 +65,7 @@ public class ArticleController {
 		return "article/articleList";
 	}
 
-	@RequestMapping(value = "/create", method = RequestMethod.GET)
+	@GetMapping("/create")
 	public String createForm(Model model) {
 		model.addAttribute("article", new Article());
 		model.addAttribute("action", "create");
@@ -73,7 +74,7 @@ public class ArticleController {
 		return "article/articleForm";
 	}
 
-	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	@PostMapping("/create")
 	public String create(@Valid Article article, RedirectAttributes redirectAttributes, HttpSession session) {
 		User user = (User) session.getAttribute(Constants.SESSION_USER);
 		article.setCreateDate(new Date());
@@ -83,7 +84,7 @@ public class ArticleController {
 		return "redirect:/article/";
 	}
 
-	@RequestMapping(value = "/update/{id}", method = RequestMethod.GET)
+	@GetMapping("/update/{id}")
 	public String updateForm(@PathVariable("id") String id, Model model) {
 		model.addAttribute("article", articleService.getArticle(id));
 		model.addAttribute("action", "update");
@@ -92,21 +93,21 @@ public class ArticleController {
 		return "article/articleForm";
 	}
 
-	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	@PostMapping("/update")
 	public String update(@Valid @ModelAttribute("article") Article article, RedirectAttributes redirectAttributes) {
 		articleService.saveArticle(article);
 		redirectAttributes.addFlashAttribute("message", "更新文章成功");
 		return "redirect:/article/";
 	}
 
-	@RequestMapping(value = "/delete/{id}")
+	@PostMapping("/delete/{id}")
 	public String delete(@PathVariable("id") String id, RedirectAttributes redirectAttributes) {
 		articleService.deleteArticle(id);
 		redirectAttributes.addFlashAttribute("message", "删除文章成功");
 		return "redirect:/article/";
 	}
 
-	@RequestMapping(value = "/view/{id}", method = RequestMethod.GET)
+	@GetMapping("/view/{id}")
 	public String view(@PathVariable("id") String id, Model model) {
 		Article article = articleService.getArticle(id);
 		model.addAttribute("articleTypes", articleService.getArticleTypeCount());
@@ -115,7 +116,7 @@ public class ArticleController {
 		return "article/articleView";
 	}
 
-	@RequestMapping(value = "/printImage/{article_id}", method = RequestMethod.GET)
+	@GetMapping("/printImage/{article_id}")
 	public ResponseEntity<byte[]> printImage(@PathVariable(value = "article_id") String article_id) {
 		Article article = articleService.getArticle(article_id);
 		byte[] image = article.getImage();
@@ -133,7 +134,7 @@ public class ArticleController {
 
 	// 分类的添加修改
 
-	@RequestMapping(value = "/createType", method = RequestMethod.GET)
+	@GetMapping("/createType")
 	public String createTypeForm(Model model) {
 		model.addAttribute("articleType", new ArticleType());
 		model.addAttribute("action", "createType");
@@ -141,14 +142,14 @@ public class ArticleController {
 		return "article/articleTypeForm";
 	}
 
-	@RequestMapping(value = "/createType", method = RequestMethod.POST)
+	@PostMapping("/createType")
 	public String createType(@Valid ArticleType articleType, RedirectAttributes redirectAttributes) {
 		articleService.saveArticleType(articleType);
 		redirectAttributes.addFlashAttribute("message", "创建分类成功");
 		return "redirect:/article/";
 	}
 
-	@RequestMapping(value = "/updateType/{id}", method = RequestMethod.GET)
+	@GetMapping("/updateType/{id}")
 	public String updateTypeForm(@PathVariable("id") String id, Model model) {
 		model.addAttribute("articleType", articleService.getArticleType(id));
 		model.addAttribute("action", "updateType");
@@ -156,7 +157,7 @@ public class ArticleController {
 		return "article/articleTypeForm";
 	}
 
-	@RequestMapping(value = "/updateType", method = RequestMethod.POST)
+	@PostMapping("/updateType")
 	public String updateType(@Valid @ModelAttribute("articleType") ArticleType articleType,
 			RedirectAttributes redirectAttributes) {
 		articleService.saveArticleType(articleType);

@@ -17,8 +17,7 @@ public class IptTextThread implements Runnable {
 	private CountDownLatch latch;
 	private BlockingQueue<Article> queue;
 
-	public IptTextThread(UserService userService,
-			ArticleService articleService, CountDownLatch latch,
+	public IptTextThread(UserService userService, ArticleService articleService, CountDownLatch latch,
 			BlockingQueue<Article> queue) {
 		this.userService = userService;
 		this.articleService = articleService;
@@ -35,22 +34,18 @@ public class IptTextThread implements Runnable {
 		Article article = null;
 		while (true) {
 			try {
-				article = queue.poll(DataHelper.WAIT_TIMEOUT,
-						DataHelper.WAIT_TIMEUNIT);
+				article = queue.poll(DataHelper.WAIT_TIMEOUT, DataHelper.WAIT_TIMEUNIT);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 			if (article != null) {
 				User user = userService.getByUsername(DataHelper.USERNAME);
-				final String qiushiId = articleService
-						.getArticleTypeIdByName("糗事");
-				ArticleType articleType = articleService
-						.getArticleType(qiushiId);
+				final String qiushiId = articleService.getArticleTypeIdByName("糗事");
+				ArticleType articleType = articleService.getArticleType(qiushiId);
 				article.setCreateUser(user);
 				article.setType(articleType);
 				articleService.saveArticle(article);
-				System.out.println("save article title -> "
-						+ article.getTitle());
+				System.out.println("save article title -> " + article.getTitle());
 			} else {
 				return;
 			}

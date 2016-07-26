@@ -20,7 +20,7 @@ public class DataHelper {
 	public static final long WAIT_TIMEOUT = 30L;
 	public static final TimeUnit WAIT_TIMEUNIT = TimeUnit.SECONDS;
 
-	public static final String USERNAME = "andygulin";
+	public static final String USERNAME = "root";
 	public static final String PASSWORD = DigestUtils.md5Hex(USERNAME);
 
 }

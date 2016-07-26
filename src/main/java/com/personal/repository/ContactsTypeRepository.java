@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.personal.entity.ContactsType;
 
-public interface ContactsTypeDao extends JpaRepository<ContactsType, String>, JpaSpecificationExecutor<ContactsType> {
+public interface ContactsTypeRepository extends JpaRepository<ContactsType, String>, JpaSpecificationExecutor<ContactsType> {
 
 	@Query("select a.id,a.name,(select count(b.type.id) from Contacts b where b.type.id=a.id) as count,a.isDefault from ContactsType a")
 	List<Object[]> getContactsTypeCount();

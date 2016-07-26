@@ -9,33 +9,33 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.personal.entity.User;
-import com.personal.repository.UserDao;
+import com.personal.repository.UserRepository;
 
 @Service
 public class UserService {
 
 	@Inject
-	private UserDao userDao;
+	private UserRepository userRepository;
 
 	public User check(User user) {
-		return userDao.check(user.getUsername(), user.getPassword());
+		return userRepository.check(user.getUsername(), user.getPassword());
 	}
 
 	@Transactional(rollbackFor = Exception.class)
 	public User save(User user) {
-		return userDao.save(user);
+		return userRepository.save(user);
 	}
 
 	public List<User> getList() {
-		return userDao.findAll();
+		return userRepository.findAll();
 	}
 
 	public User getByUsername(String username) {
-		return userDao.getByUsername(username);
+		return userRepository.getByUsername(username);
 	}
 
 	@Transactional(rollbackFor = Exception.class)
 	public void updateLastLoginDate(User user) {
-		userDao.updateLastLoginDate(new Date(), user.getId());
+		userRepository.updateLastLoginDate(new Date(), user.getId());
 	}
 }

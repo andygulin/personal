@@ -8,8 +8,7 @@ import java.util.UUID;
 
 import javax.inject.Inject;
 
-import net.coobird.thumbnailator.Thumbnails;
-
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,55 +25,57 @@ import com.google.common.collect.Maps;
 import com.personal.Constants;
 import com.personal.entity.Photo;
 import com.personal.entity.PhotoType;
-import com.personal.repository.PhotoDao;
-import com.personal.repository.PhotoTypeDao;
+import com.personal.repository.PhotoRepository;
+import com.personal.repository.PhotoTypeRepository;
 import com.personal.tools.DynamicSpecifications;
 import com.personal.tools.SearchFilter;
 import com.personal.tools.SearchFilter.Operator;
+
+import net.coobird.thumbnailator.Thumbnails;
 
 @Service
 public class PhotoService {
 
 	@Inject
-	private PhotoDao photoDao;
+	private PhotoRepository photoRepository;
 
 	public List<Photo> getPhotoList() {
-		return photoDao.findAll();
+		return photoRepository.findAll();
 	}
 
 	public Photo getPhoto(String id) {
-		return photoDao.findOne(id);
+		return photoRepository.findOne(id);
 	}
 
 	@Transactional(rollbackFor = Exception.class)
 	public Photo savePhoto(Photo photo) {
-		return photoDao.save(photo);
+		return photoRepository.save(photo);
 	}
 
 	@Transactional(rollbackFor = Exception.class)
 	public List<Photo> batchSavePhoto(List<Photo> photos) {
-		return photoDao.save(photos);
+		return photoRepository.save(photos);
 	}
 
 	@Transactional(rollbackFor = Exception.class)
 	public void deletePhoto(String id) {
-		photoDao.delete(id);
+		photoRepository.delete(id);
 	}
 
 	public List<Photo> getPhotoListById(String id) {
-		return photoDao.getListById(id);
+		return photoRepository.getListById(id);
 	}
 
 	@Transactional(rollbackFor = Exception.class)
 	public void deletePhotoAllById(String id) {
-		photoDao.deleteAllById(id);
+		photoRepository.deleteAllById(id);
 	}
 
 	public Page<Photo> findPhotoByPage(String id, Map<String, Object> searchParams, int pageNumber, int pageSize,
 			String sortType) {
 		PageRequest pageRequest = buildPhotoPageRequest(pageNumber, pageSize, sortType);
 		Specification<Photo> spec = buildPhotoSpecification(id, searchParams);
-		return photoDao.findAll(spec, pageRequest);
+		return photoRepository.findAll(spec, pageRequest);
 	}
 
 	private PageRequest buildPhotoPageRequest(int pageNumber, int pageSize, String sortType) {
@@ -95,12 +96,12 @@ public class PhotoService {
 	}
 
 	public Page<Photo> getPhotoListOrderByCreateDate(int page, int pageSize) {
-		return photoDao.findAll(new PageRequest(page, pageSize, new Sort(Direction.DESC, "createDate")));
+		return photoRepository.findAll(new PageRequest(page, pageSize, new Sort(Direction.DESC, "createDate")));
 	}
 
 	public Map<String, Object> zipFile(String id) throws Exception {
-		List<Photo> photos = photoDao.getDistinctListById(id);
-		PhotoType photoType = photoTypeDao.findOne(id);
+		List<Photo> photos = photoRepository.getDistinctListById(id);
+		PhotoType photoType = photoTypeRepository.findOne(id);
 		List<File> files = Lists.newArrayList();
 		File file = null;
 		for (Photo photo : photos) {
@@ -111,7 +112,7 @@ public class PhotoService {
 			files.add(file);
 		}
 		File[] fileArray = files.toArray(new File[files.size()]);
-		String zipFileName = photoType.getName() + ".zip";
+		String zipFileName = photoType.getName() + Constants.ZIP_FILE_EXT;
 		File zipFile = new File(Constants.SYSTEM_TEMP_PATH + zipFileName);
 		ZipUtil.packEntries(fileArray, zipFile);
 		byte[] response = FileCopyUtils.copyToByteArray(zipFile);
@@ -147,46 +148,48 @@ public class PhotoService {
 
 	// PhotoType
 	@Autowired
-	private PhotoTypeDao photoTypeDao;
+	private PhotoTypeRepository photoTypeRepository;
 
 	public List<PhotoType> getPhotoTypeList() {
-		List<PhotoType> photoTypes = photoTypeDao.findAll();
-		for (PhotoType photoType : photoTypes) {
-			String id = photoType.getId();
-			Long count = photoTypeDao.getPhotoTypeCount(id);
-			photoType.setCount(count);
+		List<PhotoType> photoTypes = photoTypeRepository.findAll();
+		if (CollectionUtils.isNotEmpty(photoTypes)) {
+			for (PhotoType photoType : photoTypes) {
+				String id = photoType.getId();
+				Long count = photoTypeRepository.getPhotoTypeCount(id);
+				photoType.setCount(count);
+			}
 		}
 		return photoTypes;
 	}
 
 	public PhotoType getPhotoType(String id) {
-		return photoTypeDao.findOne(id);
+		return photoTypeRepository.findOne(id);
 	}
 
 	@Transactional(rollbackFor = Exception.class)
 	public PhotoType savePhotoType(PhotoType photoType) {
-		return photoTypeDao.save(photoType);
+		return photoTypeRepository.save(photoType);
 	}
 
 	@Transactional(rollbackFor = Exception.class)
 	public List<PhotoType> batchSavePhotoType(List<PhotoType> photoTypes) {
-		return photoTypeDao.save(photoTypes);
+		return photoTypeRepository.save(photoTypes);
 	}
 
 	@Transactional(rollbackFor = Exception.class)
 	public void deletePhotoType(String id) {
-		photoTypeDao.delete(id);
+		photoTypeRepository.delete(id);
 	}
 
 	public Page<PhotoType> findPhotoTypeByPage(Map<String, Object> searchParams, int pageNumber, int pageSize,
 			String sortType) {
 		PageRequest pageRequest = buildPhotoTypePageRequest(pageNumber, pageSize, sortType);
 		Specification<PhotoType> spec = buildPhotoTypeSpecification(searchParams);
-		Page<PhotoType> pages = photoTypeDao.findAll(spec, pageRequest);
+		Page<PhotoType> pages = photoTypeRepository.findAll(spec, pageRequest);
 		List<PhotoType> photoTypes = pages.getContent();
 		for (PhotoType photoType : photoTypes) {
 			String id = photoType.getId();
-			Long count = photoTypeDao.getPhotoTypeCount(id);
+			Long count = photoTypeRepository.getPhotoTypeCount(id);
 			photoType.setCount(count);
 		}
 		return pages;
@@ -210,10 +213,10 @@ public class PhotoService {
 
 	@Transactional(rollbackFor = Exception.class)
 	public void setCover(String id, String tid) {
-		photoTypeDao.setCover(id, tid);
+		photoTypeRepository.setCover(id, tid);
 	}
 
 	public PhotoType getPhotoTypeByName(String name) {
-		return photoTypeDao.getPhotoTypeByName(name);
+		return photoTypeRepository.getPhotoTypeByName(name);
 	}
 }

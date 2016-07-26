@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.personal.entity.ArticleType;
 
-public interface ArticleTypeDao extends JpaRepository<ArticleType, String>, JpaSpecificationExecutor<ArticleType> {
+public interface ArticleTypeRepository extends JpaRepository<ArticleType, String>, JpaSpecificationExecutor<ArticleType> {
 
 	@Query("select a.id,a.name,(select count(b.type.id) from Article b where b.type.id=a.id) as count,a.isDefault from ArticleType a")
 	List<Object[]> getArticleTypeCount();

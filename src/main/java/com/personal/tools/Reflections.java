@@ -12,8 +12,8 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
@@ -38,19 +38,15 @@ public class Reflections {
 	 * 调用Getter方法.
 	 */
 	public static Object invokeGetter(Object obj, String propertyName) {
-		String getterMethodName = GETTER_PREFIX
-				+ StringUtils.capitalize(propertyName);
-		return invokeMethod(obj, getterMethodName, new Class[] {},
-				new Object[] {});
+		String getterMethodName = GETTER_PREFIX + StringUtils.capitalize(propertyName);
+		return invokeMethod(obj, getterMethodName, new Class[] {}, new Object[] {});
 	}
 
 	/**
 	 * 调用Setter方法, 仅匹配方法名。
 	 */
-	public static void invokeSetter(Object obj, String propertyName,
-			Object value) {
-		String setterMethodName = SETTER_PREFIX
-				+ StringUtils.capitalize(propertyName);
+	public static void invokeSetter(Object obj, String propertyName, Object value) {
+		String setterMethodName = SETTER_PREFIX + StringUtils.capitalize(propertyName);
 		invokeMethodByName(obj, setterMethodName, new Object[] { value });
 	}
 
@@ -61,8 +57,7 @@ public class Reflections {
 		Field field = getAccessibleField(obj, fieldName);
 
 		if (field == null) {
-			throw new IllegalArgumentException("Could not find field ["
-					+ fieldName + "] on target [" + obj + "]");
+			throw new IllegalArgumentException("Could not find field [" + fieldName + "] on target [" + obj + "]");
 		}
 
 		Object result = null;
@@ -77,13 +72,11 @@ public class Reflections {
 	/**
 	 * 直接设置对象属性值, 无视private/protected修饰符, 不经过setter函数.
 	 */
-	public static void setFieldValue(final Object obj, final String fieldName,
-			final Object value) {
+	public static void setFieldValue(final Object obj, final String fieldName, final Object value) {
 		Field field = getAccessibleField(obj, fieldName);
 
 		if (field == null) {
-			throw new IllegalArgumentException("Could not find field ["
-					+ fieldName + "] on target [" + obj + "]");
+			throw new IllegalArgumentException("Could not find field [" + fieldName + "] on target [" + obj + "]");
 		}
 
 		try {
@@ -97,13 +90,11 @@ public class Reflections {
 	 * 直接调用对象方法, 无视private/protected修饰符.
 	 * 用于一次性调用的情况，否则应使用getAccessibleMethod()函数获得Method后反复调用. 同时匹配方法名+参数类型，
 	 */
-	public static Object invokeMethod(final Object obj,
-			final String methodName, final Class<?>[] parameterTypes,
+	public static Object invokeMethod(final Object obj, final String methodName, final Class<?>[] parameterTypes,
 			final Object[] args) {
 		Method method = getAccessibleMethod(obj, methodName, parameterTypes);
 		if (method == null) {
-			throw new IllegalArgumentException("Could not find method ["
-					+ methodName + "] on target [" + obj + "]");
+			throw new IllegalArgumentException("Could not find method [" + methodName + "] on target [" + obj + "]");
 		}
 
 		try {
@@ -118,12 +109,10 @@ public class Reflections {
 	 * 用于一次性调用的情况，否则应使用getAccessibleMethodByName()函数获得Method后反复调用.
 	 * 只匹配函数名，如果有多个同名函数调用第一个。
 	 */
-	public static Object invokeMethodByName(final Object obj,
-			final String methodName, final Object[] args) {
+	public static Object invokeMethodByName(final Object obj, final String methodName, final Object[] args) {
 		Method method = getAccessibleMethodByName(obj, methodName);
 		if (method == null) {
-			throw new IllegalArgumentException("Could not find method ["
-					+ methodName + "] on target [" + obj + "]");
+			throw new IllegalArgumentException("Could not find method [" + methodName + "] on target [" + obj + "]");
 		}
 
 		try {
@@ -138,10 +127,9 @@ public class Reflections {
 	 * 
 	 * 如向上转型到Object仍无法找到, 返回null.
 	 */
-	public static Field getAccessibleField(final Object obj,
-			final String fieldName) {
+	public static Field getAccessibleField(final Object obj, final String fieldName) {
 		Validate.notNull(obj, "object can't be null");
-		Validate.notBlank(fieldName, "fieldName can't be blank");
+		Validate.notEmpty(fieldName, "fieldName can't be blank");
 		for (Class<?> superClass = obj.getClass(); superClass != Object.class; superClass = superClass
 				.getSuperclass()) {
 			try {
@@ -162,16 +150,15 @@ public class Reflections {
 	 * 用于方法需要被多次调用的情况. 先使用本函数先取得Method,然后调用Method.invoke(Object obj, Object...
 	 * args)
 	 */
-	public static Method getAccessibleMethod(final Object obj,
-			final String methodName, final Class<?>... parameterTypes) {
+	public static Method getAccessibleMethod(final Object obj, final String methodName,
+			final Class<?>... parameterTypes) {
 		Validate.notNull(obj, "object can't be null");
-		Validate.notBlank(methodName, "methodName can't be blank");
+		Validate.notEmpty(methodName, "methodName can't be blank");
 
 		for (Class<?> searchType = obj.getClass(); searchType != Object.class; searchType = searchType
 				.getSuperclass()) {
 			try {
-				Method method = searchType.getDeclaredMethod(methodName,
-						parameterTypes);
+				Method method = searchType.getDeclaredMethod(methodName, parameterTypes);
 				makeAccessible(method);
 				return method;
 			} catch (NoSuchMethodException e) {
@@ -187,10 +174,9 @@ public class Reflections {
 	 * 用于方法需要被多次调用的情况. 先使用本函数先取得Method,然后调用Method.invoke(Object obj, Object...
 	 * args)
 	 */
-	public static Method getAccessibleMethodByName(final Object obj,
-			final String methodName) {
+	public static Method getAccessibleMethodByName(final Object obj, final String methodName) {
 		Validate.notNull(obj, "object can't be null");
-		Validate.notBlank(methodName, "methodName can't be blank");
+		Validate.notEmpty(methodName, "methodName can't be blank");
 
 		for (Class<?> searchType = obj.getClass(); searchType != Object.class; searchType = searchType
 				.getSuperclass()) {
@@ -209,8 +195,7 @@ public class Reflections {
 	 * 改变private/protected的方法为public，尽量不调用实际改动的语句，避免JDK的SecurityManager抱怨。
 	 */
 	public static void makeAccessible(Method method) {
-		if ((!Modifier.isPublic(method.getModifiers()) || !Modifier
-				.isPublic(method.getDeclaringClass().getModifiers()))
+		if ((!Modifier.isPublic(method.getModifiers()) || !Modifier.isPublic(method.getDeclaringClass().getModifiers()))
 				&& !method.isAccessible()) {
 			method.setAccessible(true);
 		}
@@ -220,9 +205,8 @@ public class Reflections {
 	 * 改变private/protected的成员变量为public，尽量不调用实际改动的语句，避免JDK的SecurityManager抱怨。
 	 */
 	public static void makeAccessible(Field field) {
-		if ((!Modifier.isPublic(field.getModifiers())
-				|| !Modifier.isPublic(field.getDeclaringClass().getModifiers()) || Modifier
-					.isFinal(field.getModifiers())) && !field.isAccessible()) {
+		if ((!Modifier.isPublic(field.getModifiers()) || !Modifier.isPublic(field.getDeclaringClass().getModifiers())
+				|| Modifier.isFinal(field.getModifiers())) && !field.isAccessible()) {
 			field.setAccessible(true);
 		}
 	}
@@ -257,22 +241,19 @@ public class Reflections {
 		Type genType = clazz.getGenericSuperclass();
 
 		if (!(genType instanceof ParameterizedType)) {
-			logger.warn(clazz.getSimpleName()
-					+ "'s superclass not ParameterizedType");
+			logger.warn(clazz.getSimpleName() + "'s superclass not ParameterizedType");
 			return Object.class;
 		}
 
 		Type[] params = ((ParameterizedType) genType).getActualTypeArguments();
 
 		if ((index >= params.length) || (index < 0)) {
-			logger.warn("Index: " + index + ", Size of "
-					+ clazz.getSimpleName() + "'s Parameterized Type: "
+			logger.warn("Index: " + index + ", Size of " + clazz.getSimpleName() + "'s Parameterized Type: "
 					+ params.length);
 			return Object.class;
 		}
 		if (!(params[index] instanceof Class)) {
-			logger.warn(clazz.getSimpleName()
-					+ " not set the actual class on superclass generic parameter");
+			logger.warn(clazz.getSimpleName() + " not set the actual class on superclass generic parameter");
 			return Object.class;
 		}
 
@@ -295,15 +276,12 @@ public class Reflections {
 	/**
 	 * 将反射时的checked exception转换为unchecked exception.
 	 */
-	public static RuntimeException convertReflectionExceptionToUnchecked(
-			Exception e) {
-		if ((e instanceof IllegalAccessException)
-				|| (e instanceof IllegalArgumentException)
+	public static RuntimeException convertReflectionExceptionToUnchecked(Exception e) {
+		if ((e instanceof IllegalAccessException) || (e instanceof IllegalArgumentException)
 				|| (e instanceof NoSuchMethodException)) {
 			return new IllegalArgumentException(e);
 		} else if (e instanceof InvocationTargetException) {
-			return new RuntimeException(
-					((InvocationTargetException) e).getTargetException());
+			return new RuntimeException(((InvocationTargetException) e).getTargetException());
 		} else if (e instanceof RuntimeException) {
 			return (RuntimeException) e;
 		}

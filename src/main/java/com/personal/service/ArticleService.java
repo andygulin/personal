@@ -5,8 +5,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.apache.commons.lang3.BooleanUtils;
-import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,8 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.google.common.collect.Lists;
 import com.personal.entity.Article;
 import com.personal.entity.ArticleType;
-import com.personal.repository.ArticleDao;
-import com.personal.repository.ArticleTypeDao;
+import com.personal.repository.ArticleRepository;
+import com.personal.repository.ArticleTypeRepository;
 import com.personal.tools.DynamicSpecifications;
 import com.personal.tools.SearchFilter;
 
@@ -28,36 +28,36 @@ import com.personal.tools.SearchFilter;
 public class ArticleService {
 
 	@Inject
-	private ArticleDao articleDao;
+	private ArticleRepository articleRepository;
 
 	public List<Article> getArticleList() {
-		return articleDao.findAll();
+		return articleRepository.findAll();
 	}
 
 	public Article getArticle(String id) {
-		return articleDao.findOne(id);
+		return articleRepository.findOne(id);
 	}
 
 	@Transactional(rollbackFor = Exception.class)
 	public Article saveArticle(Article article) {
-		return articleDao.save(article);
+		return articleRepository.save(article);
 	}
 
 	@Transactional(rollbackFor = Exception.class)
 	public List<Article> batchSaveArticle(List<Article> articles) {
-		return articleDao.save(articles);
+		return articleRepository.save(articles);
 	}
 
 	@Transactional(rollbackFor = Exception.class)
 	public void deleteArticle(String id) {
-		articleDao.delete(id);
+		articleRepository.delete(id);
 	}
 
 	public Page<Article> findAricleByPage(Map<String, Object> searchParams, int pageNumber, int pageSize,
 			String sortType) {
 		PageRequest pageRequest = buildArticlePageRequest(pageNumber, pageSize, sortType);
 		Specification<Article> spec = buildArticleSpecification(searchParams);
-		return articleDao.findAll(spec, pageRequest);
+		return articleRepository.findAll(spec, pageRequest);
 	}
 
 	private PageRequest buildArticlePageRequest(int pageNumber, int pageSize, String sortType) {
@@ -77,38 +77,38 @@ public class ArticleService {
 	}
 
 	public Page<Article> getArticleListOrderByCreateDate(int page, int pageSize) {
-		return articleDao.findAll(new PageRequest(page, pageSize, new Sort(Direction.DESC, "createDate")));
+		return articleRepository.findAll(new PageRequest(page, pageSize, new Sort(Direction.DESC, "createDate")));
 	}
 
 	// ArticleType
 	@Autowired
-	private ArticleTypeDao articleTypeDao;
+	private ArticleTypeRepository articleTypeRepository;
 
 	public List<ArticleType> getArticleTypeList() {
-		return articleTypeDao.findAll();
+		return articleTypeRepository.findAll();
 	}
 
 	public ArticleType getArticleType(String id) {
-		return articleTypeDao.findOne(id);
+		return articleTypeRepository.findOne(id);
 	}
 
 	@Transactional(rollbackFor = Exception.class)
 	public ArticleType saveArticleType(ArticleType articleType) {
-		return articleTypeDao.save(articleType);
+		return articleTypeRepository.save(articleType);
 	}
 
 	@Transactional(rollbackFor = Exception.class)
 	public List<ArticleType> batchSaveArticleType(List<ArticleType> articleTypes) {
-		return articleTypeDao.save(articleTypes);
+		return articleTypeRepository.save(articleTypes);
 	}
 
 	@Transactional(rollbackFor = Exception.class)
 	public void deleteArticleType(String id) {
-		articleTypeDao.delete(id);
+		articleTypeRepository.delete(id);
 	}
 
 	public List<ArticleType> getArticleTypeCount() {
-		List<Object[]> list = articleTypeDao.getArticleTypeCount();
+		List<Object[]> list = articleTypeRepository.getArticleTypeCount();
 		List<ArticleType> articleTypes = Lists.newArrayList();
 		for (Object[] objs : list) {
 			Object[] obj = objs;
@@ -123,6 +123,6 @@ public class ArticleService {
 	}
 
 	public String getArticleTypeIdByName(String name) {
-		return articleTypeDao.getArticleTypeIdByName(name);
+		return articleTypeRepository.getArticleTypeIdByName(name);
 	}
 }

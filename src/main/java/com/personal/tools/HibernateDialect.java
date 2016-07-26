@@ -5,7 +5,7 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Hibernate;
 import org.hibernate.dialect.MySQL5InnoDBDialect;
 import org.hibernate.dialect.Oracle10gDialect;
@@ -37,9 +37,7 @@ public class HibernateDialect {
 		try {
 			connection = dataSource.getConnection();
 			if (connection == null) {
-				throw new IllegalStateException(
-						"Connection returned by DataSource [" + dataSource
-								+ "] was null");
+				throw new IllegalStateException("Connection returned by DataSource [" + dataSource + "] was null");
 			}
 			return connection.getMetaData().getURL();
 		} catch (SQLException e) {

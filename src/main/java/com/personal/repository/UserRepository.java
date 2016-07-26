@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.personal.entity.User;
 
-public interface UserDao extends JpaRepository<User, String>, JpaSpecificationExecutor<User> {
+public interface UserRepository extends JpaRepository<User, String>, JpaSpecificationExecutor<User> {
 
 	@Query("from User u where u.username=:username and u.password=:password")
 	User check(@Param("username") String username, @Param("password") String password);

@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
+import org.apache.commons.collections.CollectionUtils;
+
 import com.personal.entity.ArticleType;
 import com.personal.entity.ContactsType;
 import com.personal.entity.PhotoType;
@@ -53,7 +55,7 @@ public class InitThread implements Runnable {
 		}
 
 		List<ArticleType> articleType = articleService.getArticleTypeList();
-		if (articleType.size() == 0) {
+		if (CollectionUtils.isEmpty(articleType)) {
 			for (String name : articleTypes) {
 				ArticleType type = new ArticleType();
 				type.setName(name);
@@ -68,7 +70,7 @@ public class InitThread implements Runnable {
 		}
 
 		List<PhotoType> photo = photoService.getPhotoTypeList();
-		if (photo.size() == 0) {
+		if (CollectionUtils.isEmpty(photo)) {
 			for (String name : photoTypes) {
 				PhotoType p = new PhotoType();
 				p.setCover(null);
@@ -85,7 +87,7 @@ public class InitThread implements Runnable {
 		}
 
 		List<ContactsType> contacts = contactsService.getContactsTypeList();
-		if (contacts.size() == 0) {
+		if (CollectionUtils.isEmpty(contacts)) {
 			for (String name : contactsTypes) {
 				ContactsType p = new ContactsType();
 				p.setName(name);

@@ -11,16 +11,16 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.google.common.collect.Lists;
-import com.personal.data.ipt.IptTextThread;
-import com.personal.data.parse.ParseTextThread;
-import com.personal.entity.Article;
+import com.personal.data.ipt.IptImageThread;
+import com.personal.data.parse.ParseImageThread;
+import com.personal.entity.Photo;
 import com.personal.entity.PhotoType;
 import com.personal.service.ArticleService;
 import com.personal.service.ContactsService;
 import com.personal.service.PhotoService;
 import com.personal.service.UserService;
 
-public class Application {
+public class ApplicationPhoto {
 
 	private static ApplicationContext context = null;
 	private static UserService userService = null;
@@ -114,28 +114,15 @@ public class Application {
 
 	public static void main(String[] args) {
 		ExecutorService service = Executors.newCachedThreadPool();
-
 		CountDownLatch latch = new CountDownLatch(1);
-
 		service.execute(new InitThread(latch, userService, articleService, photoService, contactsService));
 
-		// 糗事最多抓取的页数
-		final int MAX_PAGE = 1000;
-		BlockingQueue<Article> articleQueue = new ArrayBlockingQueue<Article>(100);
-		for (int begin = 1, end = begin + 99; end <= MAX_PAGE; begin += 100, end += 100) {
-			service.execute(new ParseTextThread(latch, articleQueue, begin, end));
-			service.execute(new IptTextThread(userService, articleService, latch, articleQueue));
-		}
-
 		// 图片
-		// BlockingQueue<Photo> photoQueue = new ArrayBlockingQueue<Photo>(20);
-		// List<List<WebVO>> splitList = Lists.partition(webs, 5);
-		// for (List<WebVO> webs : splitList) {
-		// service.execute(new ParseImageThread(latch, photoQueue, webs));
-		// service.execute(new IptImageThread(latch, photoQueue, photoService,
-		// userService));
-		// }
-
-		service.shutdown();
+		BlockingQueue<Photo> photoQueue = new ArrayBlockingQueue<Photo>(20);
+		List<List<WebVO>> splitList = Lists.partition(webs, 5);
+		for (List<WebVO> webs : splitList) {
+			service.execute(new ParseImageThread(latch, photoQueue, webs));
+			service.execute(new IptImageThread(latch, photoQueue, photoService, userService));
+		}
 	}
 }
