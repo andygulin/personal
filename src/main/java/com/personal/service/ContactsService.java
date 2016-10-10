@@ -7,13 +7,13 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.math.NumberUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Lists;
@@ -30,10 +30,12 @@ public class ContactsService {
 	@Inject
 	private ContactsRepository contactsRepository;
 
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public List<Contacts> getContactsList() {
 		return contactsRepository.findAll();
 	}
 
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public Contacts getContacts(String id) {
 		return contactsRepository.findOne(id);
 	}
@@ -48,6 +50,7 @@ public class ContactsService {
 		contactsRepository.delete(id);
 	}
 
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public Page<Contacts> findContactsByPage(Map<String, Object> searchParams, int pageNumber, int pageSize,
 			String sortType) {
 		PageRequest pageRequest = buildContactsPageRequest(pageNumber, pageSize, sortType);
@@ -71,18 +74,21 @@ public class ContactsService {
 		return spec;
 	}
 
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public Page<Contacts> getArticleListOrderByCreateDate(int page, int pageSize) {
 		return contactsRepository.findAll(new PageRequest(page, pageSize, new Sort(Direction.DESC, "createDate")));
 	}
 
 	// ArticleType
-	@Autowired
+	@Inject
 	private ContactsTypeRepository contactsTypeRepository;
 
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public List<ContactsType> getContactsTypeList() {
 		return contactsTypeRepository.findAll();
 	}
 
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public ContactsType getContactsType(String id) {
 		return contactsTypeRepository.findOne(id);
 	}
@@ -102,6 +108,7 @@ public class ContactsService {
 		contactsTypeRepository.delete(id);
 	}
 
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public List<ContactsType> getContactsTypeCount() {
 		List<Object[]> list = contactsTypeRepository.getContactsTypeCount();
 		List<ContactsType> contactsTypes = Lists.newArrayList();

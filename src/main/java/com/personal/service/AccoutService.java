@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.personal.entity.Accout;
@@ -19,16 +20,17 @@ import com.personal.tools.DynamicSpecifications;
 import com.personal.tools.SearchFilter;
 
 @Service
-@Transactional
 public class AccoutService {
 
 	@Inject
 	private AccoutRepository accoutRepository;
 
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public List<Accout> getList() {
 		return accoutRepository.findAll();
 	}
 
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public Accout get(String id) {
 		return accoutRepository.findOne(id);
 	}
@@ -43,6 +45,7 @@ public class AccoutService {
 		accoutRepository.delete(id);
 	}
 
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public Page<Accout> findByPage(Map<String, Object> searchParams, int pageNumber, int pageSize, String sortType) {
 		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize, sortType);
 		Specification<Accout> spec = buildSpecification(searchParams);
@@ -65,6 +68,7 @@ public class AccoutService {
 		return spec;
 	}
 
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public Page<Accout> getListOrderByCreateDate(int page, int pageSize) {
 		return accoutRepository.findAll(new PageRequest(page, pageSize, new Sort(Direction.DESC, "createDate")));
 	}

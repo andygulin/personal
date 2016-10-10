@@ -117,7 +117,6 @@ public class ApplicationPhoto {
 		CountDownLatch latch = new CountDownLatch(1);
 		service.execute(new InitThread(latch, userService, articleService, photoService, contactsService));
 
-		// 图片
 		BlockingQueue<Photo> photoQueue = new ArrayBlockingQueue<Photo>(20);
 		List<List<WebVO>> splitList = Lists.partition(webs, 5);
 		for (List<WebVO> webs : splitList) {

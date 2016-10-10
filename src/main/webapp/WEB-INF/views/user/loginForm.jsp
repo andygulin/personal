@@ -20,14 +20,14 @@
 				<label for="user_username" class="control-label">用户名:</label>
 				<div class="controls">
 					<input type="text" id="username" name="username"
-						class="input-large required" minlength="5" />
+						class="input-large required" minlength="4" />
 				</div>
 			</div>
 			<div class="control-group">
 				<label for="user_password" class="control-label">密码:</label>
 				<div class="controls">
 					<input type="password" id="password" name="password"
-						class="input-large required" minlength="5" />
+						class="input-large required" minlength="4" />
 				</div>
 			</div>
 			<div class="form-actions">

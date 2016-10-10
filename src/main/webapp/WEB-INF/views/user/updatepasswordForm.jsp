@@ -21,21 +21,21 @@
 				<label for="user_password" class="control-label">原密码:</label>
 				<div class="controls">
 					<input type="password" id="password1" name="password1"
-						class="input-large required" minlength="5" />
+						class="input-large required" minlength="4" />
 				</div>
 			</div>
 			<div class="control-group">
 				<label for="user_password" class="control-label">新密码:</label>
 				<div class="controls">
 					<input type="password" id="password2" name="password2"
-						class="input-large required" minlength="5" />
+						class="input-large required" minlength="4" />
 				</div>
 			</div>
 			<div class="control-group">
 				<label for="user_password" class="control-label">重复新密码:</label>
 				<div class="controls">
 					<input type="password" id="password22" name="password22"
-						class="input-large required" minlength="5" equalTo="#password2" />
+						class="input-large required" minlength="4" equalTo="#password2" />
 				</div>
 			</div>
 			<div class="form-actions">

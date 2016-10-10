@@ -7,13 +7,13 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.math.NumberUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Lists;
@@ -30,10 +30,12 @@ public class ArticleService {
 	@Inject
 	private ArticleRepository articleRepository;
 
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public List<Article> getArticleList() {
 		return articleRepository.findAll();
 	}
 
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public Article getArticle(String id) {
 		return articleRepository.findOne(id);
 	}
@@ -53,6 +55,7 @@ public class ArticleService {
 		articleRepository.delete(id);
 	}
 
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public Page<Article> findAricleByPage(Map<String, Object> searchParams, int pageNumber, int pageSize,
 			String sortType) {
 		PageRequest pageRequest = buildArticlePageRequest(pageNumber, pageSize, sortType);
@@ -76,18 +79,21 @@ public class ArticleService {
 		return spec;
 	}
 
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public Page<Article> getArticleListOrderByCreateDate(int page, int pageSize) {
 		return articleRepository.findAll(new PageRequest(page, pageSize, new Sort(Direction.DESC, "createDate")));
 	}
 
 	// ArticleType
-	@Autowired
+	@Inject
 	private ArticleTypeRepository articleTypeRepository;
 
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public List<ArticleType> getArticleTypeList() {
 		return articleTypeRepository.findAll();
 	}
 
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public ArticleType getArticleType(String id) {
 		return articleTypeRepository.findOne(id);
 	}
@@ -107,6 +113,7 @@ public class ArticleService {
 		articleTypeRepository.delete(id);
 	}
 
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public List<ArticleType> getArticleTypeCount() {
 		List<Object[]> list = articleTypeRepository.getArticleTypeCount();
 		List<ArticleType> articleTypes = Lists.newArrayList();
@@ -122,6 +129,7 @@ public class ArticleService {
 		return articleTypes;
 	}
 
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public String getArticleTypeIdByName(String name) {
 		return articleTypeRepository.getArticleTypeIdByName(name);
 	}

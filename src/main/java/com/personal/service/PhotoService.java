@@ -9,13 +9,13 @@ import java.util.UUID;
 import javax.inject.Inject;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
 import org.zeroturnaround.zip.ZipUtil;
@@ -39,10 +39,12 @@ public class PhotoService {
 	@Inject
 	private PhotoRepository photoRepository;
 
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public List<Photo> getPhotoList() {
 		return photoRepository.findAll();
 	}
 
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public Photo getPhoto(String id) {
 		return photoRepository.findOne(id);
 	}
@@ -62,6 +64,7 @@ public class PhotoService {
 		photoRepository.delete(id);
 	}
 
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public List<Photo> getPhotoListById(String id) {
 		return photoRepository.getListById(id);
 	}
@@ -71,6 +74,7 @@ public class PhotoService {
 		photoRepository.deleteAllById(id);
 	}
 
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public Page<Photo> findPhotoByPage(String id, Map<String, Object> searchParams, int pageNumber, int pageSize,
 			String sortType) {
 		PageRequest pageRequest = buildPhotoPageRequest(pageNumber, pageSize, sortType);
@@ -95,10 +99,12 @@ public class PhotoService {
 		return spec;
 	}
 
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public Page<Photo> getPhotoListOrderByCreateDate(int page, int pageSize) {
 		return photoRepository.findAll(new PageRequest(page, pageSize, new Sort(Direction.DESC, "createDate")));
 	}
 
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public Map<String, Object> zipFile(String id) throws Exception {
 		List<Photo> photos = photoRepository.getDistinctListById(id);
 		PhotoType photoType = photoTypeRepository.findOne(id);
@@ -147,9 +153,10 @@ public class PhotoService {
 	}
 
 	// PhotoType
-	@Autowired
+	@Inject
 	private PhotoTypeRepository photoTypeRepository;
 
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public List<PhotoType> getPhotoTypeList() {
 		List<PhotoType> photoTypes = photoTypeRepository.findAll();
 		if (CollectionUtils.isNotEmpty(photoTypes)) {
@@ -162,6 +169,7 @@ public class PhotoService {
 		return photoTypes;
 	}
 
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public PhotoType getPhotoType(String id) {
 		return photoTypeRepository.findOne(id);
 	}
@@ -181,6 +189,7 @@ public class PhotoService {
 		photoTypeRepository.delete(id);
 	}
 
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public Page<PhotoType> findPhotoTypeByPage(Map<String, Object> searchParams, int pageNumber, int pageSize,
 			String sortType) {
 		PageRequest pageRequest = buildPhotoTypePageRequest(pageNumber, pageSize, sortType);
@@ -216,6 +225,7 @@ public class PhotoService {
 		photoTypeRepository.setCover(id, tid);
 	}
 
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public PhotoType getPhotoTypeByName(String name) {
 		return photoTypeRepository.getPhotoTypeByName(name);
 	}

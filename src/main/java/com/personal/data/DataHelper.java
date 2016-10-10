@@ -13,8 +13,6 @@ public class DataHelper {
 	public static final int DEFAULT_PAGE_SIZE = 1;
 	public static final String NO_PHOTO = "http://x.autoimg.cn/car/images/grey-bg.gif";
 
-	public static final String PARSE_URL = "http://www.qiushibaike.com/month/page/";
-
 	public static final int TIMEOUT = Integer.MAX_VALUE;
 
 	public static final long WAIT_TIMEOUT = 30L;

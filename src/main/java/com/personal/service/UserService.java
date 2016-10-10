@@ -6,6 +6,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.personal.entity.User;
@@ -17,6 +18,7 @@ public class UserService {
 	@Inject
 	private UserRepository userRepository;
 
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public User check(User user) {
 		return userRepository.check(user.getUsername(), user.getPassword());
 	}
@@ -26,10 +28,12 @@ public class UserService {
 		return userRepository.save(user);
 	}
 
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public List<User> getList() {
 		return userRepository.findAll();
 	}
 
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public User getByUsername(String username) {
 		return userRepository.getByUsername(username);
 	}

@@ -48,7 +48,7 @@ public class InitThread implements Runnable {
 			u.setUsername(DataHelper.USERNAME);
 			u.setPassword(DataHelper.PASSWORD);
 			u.setIsEnabled((byte) 1);
-			u.setNickname("顾大林");
+			u.setNickname("管理员");
 			u.setCreateDate(new Date());
 			u.setLevel((byte) 1);
 			userService.save(u);
