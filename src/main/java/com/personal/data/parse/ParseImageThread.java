@@ -76,7 +76,7 @@ public class ParseImageThread implements Runnable {
 						e.printStackTrace();
 					}
 					queue.offer(photo);
-					System.out.println("parse image src -> " + photo.getSrcName());
+					System.out.println("Parse Image : " + photo.getSrcName());
 				}
 			}
 		}

@@ -17,8 +17,8 @@ public class IptImageThread implements Runnable {
 	private PhotoService photoService;
 	private UserService userService;
 
-	public IptImageThread(CountDownLatch latch, BlockingQueue<Photo> queue,
-			PhotoService photoService, UserService userService) {
+	public IptImageThread(CountDownLatch latch, BlockingQueue<Photo> queue, PhotoService photoService,
+			UserService userService) {
 		this.latch = latch;
 		this.queue = queue;
 		this.photoService = photoService;
@@ -34,8 +34,7 @@ public class IptImageThread implements Runnable {
 		Photo photo = null;
 		while (true) {
 			try {
-				photo = queue.poll(DataHelper.WAIT_TIMEOUT,
-						DataHelper.WAIT_TIMEUNIT);
+				photo = queue.poll(DataHelper.WAIT_TIMEOUT, DataHelper.WAIT_TIMEUNIT);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -48,9 +47,7 @@ public class IptImageThread implements Runnable {
 					photoType.setCover(photo);
 					photoService.savePhotoType(photoType);
 				}
-				System.out.println("save image src -> " + photo.getSrcName());
-			} else {
-				return;
+				System.out.println("Save Image : " + photo.getSrcName());
 			}
 		}
 	}

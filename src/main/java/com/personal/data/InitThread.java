@@ -100,6 +100,7 @@ public class InitThread implements Runnable {
 			}
 			contactsService.batchSaveContactsType(contacts);
 		}
+		System.out.println("Init Thread Finish...");
 		latch.countDown();
 	}
 }

@@ -1,6 +1,3 @@
-### Init
-	com.personal.data.ApplicationPhoto
-
 ### module
 	Account 帐号
 	Article 文章
