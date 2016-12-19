@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-	<script src="//cdn.bootcss.com/bootstrap/2.3.2/js/bootstrap.min.js"></script>
+         pageEncoding="UTF-8" %>
+<script src="//cdn.bootcss.com/bootstrap/2.3.2/js/bootstrap.min.js"></script>
 </body>
 </html>

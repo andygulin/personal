@@ -1,101 +1,93 @@
 package com.personal.entity;
 
+import javax.persistence.*;
 import java.util.Date;
-
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 
 @Entity
 @Table
 public class Article extends IdEntity {
 
-	private static final long serialVersionUID = 9075293636042773700L;
+    private static final long serialVersionUID = 9075293636042773700L;
 
-	@Column(length = 255)
-	private String title;
+    @Column(length = 255)
+    private String title;
 
-	@Column(columnDefinition = "longtext")
-	private String content;
+    @Column(columnDefinition = "longtext")
+    private String content;
 
-	@Lob
-	@Column(columnDefinition = "longblob")
-	@Basic(fetch = FetchType.LAZY)
-	private byte[] image;
+    @Lob
+    @Column(columnDefinition = "longblob")
+    @Basic(fetch = FetchType.LAZY)
+    private byte[] image;
 
-	@Column(length = 255)
-	private String srcName;
+    @Column(length = 255)
+    private String srcName;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "typeId")
-	private ArticleType type;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "typeId")
+    private ArticleType type;
 
-	@Column(updatable = false)
-	private Date createDate;
+    @Column(updatable = false)
+    private Date createDate;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "createUserId", updatable = false)
-	private User createUser;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "createUserId", updatable = false)
+    private User createUser;
 
-	public String getTitle() {
-		return title;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public String getContent() {
-		return content;
-	}
+    public String getContent() {
+        return content;
+    }
 
-	public void setContent(String content) {
-		this.content = content;
-	}
+    public void setContent(String content) {
+        this.content = content;
+    }
 
-	public byte[] getImage() {
-		return image;
-	}
+    public byte[] getImage() {
+        return image;
+    }
 
-	public void setImage(byte[] image) {
-		this.image = image;
-	}
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
 
-	public String getSrcName() {
-		return srcName;
-	}
+    public String getSrcName() {
+        return srcName;
+    }
 
-	public void setSrcName(String srcName) {
-		this.srcName = srcName;
-	}
+    public void setSrcName(String srcName) {
+        this.srcName = srcName;
+    }
 
-	public ArticleType getType() {
-		return type;
-	}
+    public ArticleType getType() {
+        return type;
+    }
 
-	public void setType(ArticleType type) {
-		this.type = type;
-	}
+    public void setType(ArticleType type) {
+        this.type = type;
+    }
 
-	public Date getCreateDate() {
-		return createDate;
-	}
+    public Date getCreateDate() {
+        return createDate;
+    }
 
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
 
-	public User getCreateUser() {
-		return createUser;
-	}
+    public User getCreateUser() {
+        return createUser;
+    }
 
-	public void setCreateUser(User createUser) {
-		this.createUser = createUser;
-	}
+    public void setCreateUser(User createUser) {
+        this.createUser = createUser;
+    }
 
 }

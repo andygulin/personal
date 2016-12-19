@@ -9,38 +9,38 @@ import javax.persistence.Transient;
 @Table
 public class ArticleType extends IdEntity {
 
-	private static final long serialVersionUID = 1126558033167475042L;
+    private static final long serialVersionUID = 1126558033167475042L;
 
-	@Column(length = 20)
-	private String name;
+    @Column(length = 20)
+    private String name;
 
-	private Boolean isDefault;
+    private Boolean isDefault;
 
-	@Transient
-	private Long count;
+    @Transient
+    private Long count;
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public Boolean getIsDefault() {
-		return isDefault;
-	}
+    public Boolean getIsDefault() {
+        return isDefault;
+    }
 
-	public void setIsDefault(Boolean isDefault) {
-		this.isDefault = isDefault;
-	}
+    public void setIsDefault(Boolean isDefault) {
+        this.isDefault = isDefault;
+    }
 
-	public Long getCount() {
-		return count;
-	}
+    public Long getCount() {
+        return count;
+    }
 
-	public void setCount(Long count) {
-		this.count = count;
-	}
+    public void setCount(Long count) {
+        this.count = count;
+    }
 
 }

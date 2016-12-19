@@ -4,8 +4,8 @@ import org.junit.Test;
 
 public class PersonalTest extends BaseTest {
 
-	@Test
-	public void test(){
-		
-	}
+    @Test
+    public void test() {
+
+    }
 }

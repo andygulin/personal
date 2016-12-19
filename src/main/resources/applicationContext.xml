@@ -1,83 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jpa="http://www.springframework.org/schema/data/jpa"
-	xsi:schemaLocation="
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa" xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
 		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd"
-	default-lazy-init="true">
+       default-lazy-init="true">
 
-	<context:component-scan base-package="com.personal">
-		<context:exclude-filter type="annotation"
-			expression="org.springframework.stereotype.Controller" />
-		<context:exclude-filter type="annotation"
-			expression="org.springframework.web.bind.annotation.ControllerAdvice" />
-	</context:component-scan>
+    <context:component-scan base-package="com.personal">
+        <context:exclude-filter type="annotation"
+                                expression="org.springframework.stereotype.Controller"/>
+        <context:exclude-filter type="annotation"
+                                expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+    </context:component-scan>
 
-	<bean id="entityManagerFactory"
-		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-		<property name="dataSource" ref="dataSource" />
-		<property name="jpaVendorAdapter" ref="hibernateJpaVendorAdapter" />
-		<property name="packagesToScan" value="com.personal" />
-		<property name="jpaProperties">
-			<props>
-				<prop key="hibernate.physical_naming_strategy">com.personal.hibernate.CustomImprovedNamingStrategy
-				</prop>
-				<prop key="hibernate.show_sql">false</prop>
-				<prop key="hibernate.format_sql">false</prop>
-				<prop key="hibernate.hbm2ddl.auto">update</prop>
-				<prop key="hibernate.max_fetch_depth">3</prop>
-				<prop key="hibernate.jdbc.fetch_size">18</prop>
-				<prop key="hibernate.jdbc.batch_size">10</prop>
-				<prop key="hibernate.connection.autocommit">false</prop>
-				<prop key="hibernate.temp.use_jdbc_metadata_defaults">false</prop>
-				<prop key="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</prop>
-			</props>
-		</property>
-	</bean>
+    <bean id="entityManagerFactory"
+          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="jpaVendorAdapter" ref="hibernateJpaVendorAdapter"/>
+        <property name="packagesToScan" value="com.personal"/>
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.physical_naming_strategy">com.personal.hibernate.CustomImprovedNamingStrategy
+                </prop>
+                <prop key="hibernate.show_sql">false</prop>
+                <prop key="hibernate.format_sql">false</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+                <prop key="hibernate.max_fetch_depth">3</prop>
+                <prop key="hibernate.jdbc.fetch_size">18</prop>
+                <prop key="hibernate.jdbc.batch_size">10</prop>
+                <prop key="hibernate.connection.autocommit">false</prop>
+                <prop key="hibernate.temp.use_jdbc_metadata_defaults">false</prop>
+                <prop key="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</prop>
+            </props>
+        </property>
+    </bean>
 
-	<bean id="hibernateJpaVendorAdapter"
-		class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
-		<property name="databasePlatform">
-			<bean factory-method="getDialect" class="com.personal.tools.HibernateDialect">
-				<constructor-arg ref="dataSource" />
-			</bean>
-		</property>
-	</bean>
+    <bean id="hibernateJpaVendorAdapter"
+          class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+        <property name="databasePlatform">
+            <bean factory-method="getDialect" class="com.personal.tools.HibernateDialect">
+                <constructor-arg ref="dataSource"/>
+            </bean>
+        </property>
+    </bean>
 
-	<jpa:repositories base-package="com.personal"
-		transaction-manager-ref="transactionManager"
-		entity-manager-factory-ref="entityManagerFactory" />
+    <jpa:repositories base-package="com.personal"
+                      transaction-manager-ref="transactionManager"
+                      entity-manager-factory-ref="entityManagerFactory"/>
 
-	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-		<property name="entityManagerFactory" ref="entityManagerFactory" />
-	</bean>
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
 
-	<tx:annotation-driven transaction-manager="transactionManager"
-		proxy-target-class="true" />
+    <tx:annotation-driven transaction-manager="transactionManager"
+                          proxy-target-class="true"/>
 
-	<bean id="validator"
-		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
+    <bean id="validator"
+          class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
 
-	<context:property-placeholder
-		ignore-resource-not-found="true" location="classpath*:/jdbc.properties" />
-	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
-		destroy-method="close">
-		<property name="driverClass" value="${jdbc.driverClass}" />
-		<property name="jdbcUrl" value="${jdbc.jdbcUrl}" />
-		<property name="user" value="${jdbc.user}" />
-		<property name="password" value="${jdbc.password}" />
-		<property name="minPoolSize" value="1" />
-		<property name="maxPoolSize" value="0" />
-		<property name="maxIdleTime" value="1800" />
-		<property name="acquireIncrement" value="2" />
-		<property name="maxStatements" value="0" />
-		<property name="initialPoolSize" value="2" />
-		<property name="idleConnectionTestPeriod" value="1800" />
-		<property name="acquireRetryAttempts" value="30" />
-		<property name="breakAfterAcquireFailure" value="true" />
-		<property name="testConnectionOnCheckout" value="true" />
-	</bean>
+    <context:property-placeholder
+            ignore-resource-not-found="true" location="classpath*:/jdbc.properties"/>
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+          destroy-method="close">
+        <property name="driverClass" value="${jdbc.driverClass}"/>
+        <property name="jdbcUrl" value="${jdbc.jdbcUrl}"/>
+        <property name="user" value="${jdbc.user}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="minPoolSize" value="1"/>
+        <property name="maxPoolSize" value="0"/>
+        <property name="maxIdleTime" value="1800"/>
+        <property name="acquireIncrement" value="2"/>
+        <property name="maxStatements" value="0"/>
+        <property name="initialPoolSize" value="2"/>
+        <property name="idleConnectionTestPeriod" value="1800"/>
+        <property name="acquireRetryAttempts" value="30"/>
+        <property name="breakAfterAcquireFailure" value="true"/>
+        <property name="testConnectionOnCheckout" value="true"/>
+    </bean>
 </beans>

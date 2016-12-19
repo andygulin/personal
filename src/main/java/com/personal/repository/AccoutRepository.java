@@ -1,9 +1,8 @@
 package com.personal.repository;
 
+import com.personal.entity.Accout;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-
-import com.personal.entity.Accout;
 
 public interface AccoutRepository extends JpaRepository<Accout, String>, JpaSpecificationExecutor<Accout> {
 }
