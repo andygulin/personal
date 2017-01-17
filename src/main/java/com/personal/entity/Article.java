@@ -9,7 +9,7 @@ public class Article extends IdEntity {
 
     private static final long serialVersionUID = 9075293636042773700L;
 
-    @Column(length = 255)
+    @Column
     private String title;
 
     @Column(columnDefinition = "longtext")
@@ -20,7 +20,7 @@ public class Article extends IdEntity {
     @Basic(fetch = FetchType.LAZY)
     private byte[] image;
 
-    @Column(length = 255)
+    @Column
     private String srcName;
 
     @ManyToOne(fetch = FetchType.LAZY)

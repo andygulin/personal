@@ -16,7 +16,7 @@ public class User extends IdEntity {
     @Column(length = 20)
     private String nickname;
 
-    @Column(length = 255)
+    @Column
     private String password;
 
     private byte isEnabled;

@@ -8,14 +8,14 @@ import java.util.Date;
 public class Photo extends IdEntity {
     private static final long serialVersionUID = -1110370875601964461L;
 
-    @Column(length = 255)
+    @Column
     private String srcName;
 
     @Lob
     @Column(columnDefinition = "longblob")
     private byte[] image;
 
-    @Column(length = 255)
+    @Column
     private String remark;
 
     @ManyToOne(fetch = FetchType.LAZY)

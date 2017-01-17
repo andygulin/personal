@@ -109,7 +109,7 @@ public class PhotoService {
         List<Photo> photos = photoRepository.getDistinctListById(id);
         PhotoType photoType = photoTypeRepository.findOne(id);
         List<File> files = Lists.newArrayList();
-        File file = null;
+        File file;
         for (Photo photo : photos) {
             byte[] image = photo.getImage();
             String filename = Constants.SYSTEM_TEMP_PATH + photo.getSrcName();

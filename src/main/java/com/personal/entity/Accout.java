@@ -9,13 +9,13 @@ public class Accout extends IdEntity {
 
     private static final long serialVersionUID = 607067217661692160L;
 
-    @Column(length = 255)
+    @Column
     private String username;
 
-    @Column(length = 255)
+    @Column
     private String password;
 
-    @Column(length = 255)
+    @Column
     private String remark;
 
     @Column(updatable = false)

@@ -20,10 +20,10 @@ public class Contacts extends IdEntity {
     @Column(length = 50)
     private String tel;
 
-    @Column(length = 255)
+    @Column
     private String address;
 
-    @Column(length = 255)
+    @Column
     private String remark;
 
     @ManyToOne(fetch = FetchType.LAZY)
